@@ -61,9 +61,23 @@ else
 }
 }
 	
-void Delete(int i,int list)
+void Delete(int i,list pr)
 {
-	
+list p;
+p=find(i-1,pr);
+s=p->next;
+if(p==NULL)
+{
+	cout<<"²ÎÊý´íÎó";
+}
+else
+{
+	p->next=s->next;
+	free(s);
+}
+
+}
+
 }
 int main()
 {
