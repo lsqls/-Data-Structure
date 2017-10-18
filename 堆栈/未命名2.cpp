@@ -6,10 +6,6 @@ struct snode{
 	int data;
 	stack next;
 };
-int main()
-{
-	return 0;
-}
 stack create()
 {
 	stack s;
@@ -46,4 +42,9 @@ int pop(stack s)
 		return itop;
 	}
 }
+int main()
+{
+	return 0; 
+} 
+
 
