@@ -137,6 +137,6 @@ void josephus(int n,int k)
 }
 int main()
 {
-	josephus(10,2);
+	josephus(10,3);
 	return 0;
 }
