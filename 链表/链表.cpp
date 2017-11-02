@@ -13,7 +13,7 @@ private:
 	node <T> *header;//header pointer
 public:
 	list();
-	list(T a[],int n);
+	list(T a[],int n,int loc=0);
 	list(list &A);
 	void print();
 	int len();
@@ -30,15 +30,27 @@ list <T>::list()
 	header->next=NULL;
 }
 template <class T>
-list <T>::list(T a[],int n)
+list <T>::list(T a[],int n,int loc)//0 ͷ�巨  1β�巨  
 {	header=new node <T>;
 	header->next=NULL;
-	for(int i=n-1;i>=0;--i)
-	{	
-		node <T> *p=new node <T>;
-		p->data=a[i];
-		p->next=header->next;
-		header->next=p;
+	if (loc==0)
+		for(int i=n-1;i>=0;--i)
+		{	
+			node <T> *p=new node <T>;
+			p->data=a[i];
+			p->next=header->next;
+			header->next=p;
+		}
+	if (loc==1) 
+	{	node <T> *q=header;
+	 	for(int i=0;i<n;i++)
+		{	
+			node <T> *p=new node <T>;
+			p->data=a[i];
+			q->next=p;
+			q=p;
+			q->next=NULL;
+		} 
 	}
 }
 template <class T>
@@ -148,7 +160,7 @@ void list <T>::__delete(int i)
 }	
 int main()
 {	int a[4]={1,2,3,4};
-	list <int> b(a,4);
+	list <int> b(a,4,0);
 	b.print();
 	cout<<b.get(2)<<endl;
 	cout<<b.locate(3)<<endl;
@@ -157,7 +169,16 @@ int main()
 	b.__delete(1);
 	b.print();
 	cout<<b.len()<<endl;
-	list <int> c(b);
+	list <int> d(a,4,1);
+	d.print();
+	cout<<d.get(2)<<endl;
+	cout<<d.locate(2)<<endl;
+	cout<<d.len()<<endl;
+	d.insert(5,78);
+	d.__delete(1);
+	d.print();
+	cout<<d.len()<<endl;
+	list <int> c(d);
 	c.print();
 	cout<<c.get(2)<<endl;
 	cout<<c.locate(3)<<endl;
