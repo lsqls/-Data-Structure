@@ -191,8 +191,7 @@ void Polynomial::print()
 	int i=1;
 	while(p!=NULL)
 	{
-		cout<<"第"<<i<<"项"<<"系数:"<<p->data.coef<<',';
-		cout<<"指数:"<<p->data.expn<<",\n";
+		cout<<p->data.coef<<"x^"<<p->data.expn<<"+";
 		p=p->next;
 		i++;
 	}
@@ -201,7 +200,7 @@ void Polynomial::add(Polynomial &A)
 {
 	 node <term> *p_prior=getheader();
 	 node <term> *p=p_prior->next;
-	 node <term> *q=A.getheader();
+	 node <term> *q=A.getheader()->next;
 	 while(p&&q)
 		{ if(p->data.expn<q->data.expn)
 		 {
@@ -218,7 +217,7 @@ void Polynomial::add(Polynomial &A)
 		 else
 		 {
 			 p->data.coef+=p->data.coef;
-			 if(p->data.coef==0)
+			 if(fabs(p->data.coef)<1e-7)
 			 {
 				 p_prior->next=p->next;
 				 delete p;
@@ -234,7 +233,8 @@ void Polynomial::add(Polynomial &A)
 			 delete temp;
 		 }
 }
-if (q) p_prior=q;
+	 if (q) p_prior->next=q;
+	 A.getheader()->next=NULL;
 }
 Polynomial NewPolynomial()
 {
@@ -254,7 +254,7 @@ int main()
 {
 	Polynomial A=NewPolynomial();
 	Polynomial B=NewPolynomial();
-	cout<<A.cal(3);
+	cout<<A.cal(3)<<endl;
 	A.add(B);
 	A.print();
 	return 0;
