@@ -201,16 +201,22 @@ int MGraph<T>::findmin(int Disk[], bool S[], int n)
 template <class T>
 void MGraph <T>::PrintPath(int Disk[], int Path[], int n)
 {
+	
 	for (int i = 0; i < n; i++)
-	{	
-		cout << vertex[i] << ":" << Disk[i] << "\t" << vertex[i];
+	{
+		char tmp[maxsize] ;
+		int m = 0;
+		cout << vertex[i] << ":" << Disk[i] << "\t";
+		tmp[m] = vertex[i];
 		int pre = Path[i];
 		while (pre != -1)
 		{
-			cout<<"<<---"<<vertex[pre];
+			tmp[++m] = vertex[pre];
 			pre = Path[pre];
 		}
-		cout << "\n";
+		for (int j = m; j >0; j--)
+			cout << tmp[j]<<"--->>";
+		cout << tmp[0] << "\n";
 	}
 }
 template <class T>
