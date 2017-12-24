@@ -1,5 +1,4 @@
 #include <iostream>
-#include <cstring> 
 using namespace std;
 struct HNode
 {
@@ -21,6 +20,7 @@ private:
 	void selectmin(int &x, int &y, int start, int end);
 	int min(int m,int n);
 public:
+	void init();
 	void CreateTree(int a[], int n);
 	void CreateCodeTable(char b[], int n);
 	void Encode(char *s, char *d, int n);
@@ -138,18 +138,45 @@ void Huffman::Decode(char *s, char *d, int n)
 		d++;
 	}
 }
+
+void init(int a[],char leaf[],char str[],int nNum[],int &n)
+{
+	cout << "输入要编码的字符串:";
+	int ch = cin.get();
+	int i = 0;
+	while (ch != '\n')
+	{
+		nNum[ch]++;
+		str[i++] = ch;
+		ch = cin.get();
+	}
+	str[i] = '\0';
+	n = 0;
+	for (int i = 0; i < 256; i++)
+	{
+		if (nNum[i] > 0)
+		{
+			leaf[n] = (char)i;
+			a[n] = nNum[i];
+			n++;
+		}
+	}
+}
 int main()
 {
-	int weight[4] = { 2,3,6,9 };
-	char b[4] = { 'Z','C','B','A' };
+	int nNum[256] = { 0 };
+	char str[1024];
+	char leaf[256];
+	int a[256];
+	int n;
+	init(a, leaf, str, nNum, n);
 	Huffman A;
-	A.CreateTree(weight, 4);
-	A.CreateCodeTable(b, 4);
-	char d[100] = "ACCZBBBAAACBBZABAAAA";
-	char s[100] = "";
-	A.Encode(s, d, 4);
-	cout << s;
+	A.CreateTree(a,n);
+	A.CreateCodeTable(leaf,n);
+	char s[10000] = "";
+	A.Encode(s, str, n);
+	cout << "编码结果为:"<<s;
 	cout << endl;
-	A.Decode(s, d, 4);
-	cout << d;
+	A.Decode(s, str, n);
+	cout << "解码结果:"<<str;
 }
