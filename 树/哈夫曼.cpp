@@ -1,5 +1,5 @@
 #include <iostream>
-#include <string.h>
+#include <cstring> 
 using namespace std;
 struct HNode
 {
@@ -19,35 +19,32 @@ private:
 	HNode * HTree;
 	HCode * HCodeTable;
 	void selectmin(int &x, int &y, int start, int end);
+	int min(int m,int n);
 public:
 	void CreateTree(int a[], int n);
 	void CreateCodeTable(char b[], int n);
 	void Encode(char *s, char *d, int n);
 	void Decode(char *s, char *d, int n);
-	~Huffman() {};
-	
+	~Huffman() { delete[] HTree; delete[] HCodeTable; };
 };
+int Huffman::min(int n, int m)
+{
+	int i = n;
+	int min = -1;
+	while (HTree[i].par != -1 )
+			i++;
+	min = i;
+	for(;i<m;i++)
+		if (HTree[min].weight > HTree[i].weight&& HTree[i].par==-1)
+			min = i;
+	HTree[min].par = -2;
+	return min;
+	
+}
 void Huffman::selectmin(int &x, int &y, int start, int end)
 {	
-	int m = start;
-	while (HTree[m++].par != -1);
-	x = m - 1;
-	while (HTree[m++].par != -1);
-	y = m - 1;
-	if (HTree[y].weight < HTree[x].weight)
-	{	
-		int temp = x;
-		x = y;
-		y = temp;
-	}
-	for (int i = m; i < end; i++)
-	{
-		if ((HTree[i].weight < HTree[x].weight)&&HTree[i].par==-1)
-		{
-			x = i;
-			y = x;
-		}
-	}
+	x = min(start, end);
+	y = min(start, end);
 }
 
 void Huffman::CreateTree(int a[], int n)
@@ -56,9 +53,7 @@ void Huffman::CreateTree(int a[], int n)
 	for (int i =0 ; i < n; i++)
 	{
 		HTree[i].weight = a[i];
-		HTree[i].lc = -1;
-		HTree[i].rc = -1;
-		HTree[i].par = -1;
+		HTree[i].lc =HTree[i].par =HTree[i].rc = -1;
 	}
 	int x, y;
 	for (int i = n; i < 2 * n - 1; i++)
@@ -89,12 +84,12 @@ void Huffman::CreateCodeTable(char b[], int n)
 	for (int i = 0; i < n; i++)
 	{
 		HCodeTable[i].data = b[i];
-		int child = -1;
+		int child = i;
 		int parent = HTree[i].par;
 		int k = 0;
 		while (parent != -1)
 		{
-			if (child == HTree[i].lc)
+			if (child == HTree[parent].lc)
 				HCodeTable[i].code[k] = '0';
 			else
 				HCodeTable[i].code[k] = '1';
@@ -106,6 +101,14 @@ void Huffman::CreateCodeTable(char b[], int n)
 		Reverse(HCodeTable[i].code);
 	}
 }
+char * strcat(char *dst, char *src)
+{
+	char *start = dst;
+	int len_dst = strlen(dst);
+	dst += len_dst;
+	while (*dst++ = *src++);
+	return start;
+}
 void Huffman::Encode(char *s, char *d, int n)
 {
 	while (*d != '\0')
@@ -113,7 +116,7 @@ void Huffman::Encode(char *s, char *d, int n)
 		for (int i = 0; i < n; i++)
 			if (HCodeTable[i].data == *d)
 			{
-				strcat_s(s, strlen(HCodeTable[i].code), d);
+				strcat(s, HCodeTable[i].code);
 			}
 		d++;
 	}
@@ -145,6 +148,8 @@ int main()
 	char d[100] = "ACCZBBBAAACBBZABAAAA";
 	char s[100] = "";
 	A.Encode(s, d, 4);
-	cout << d;
+	cout << s;
+	cout << endl;
 	A.Decode(s, d, 4);
+	cout << d;
 }
