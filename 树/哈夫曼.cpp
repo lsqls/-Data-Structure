@@ -1,4 +1,7 @@
 #include <iostream>
+#include <iomanip>
+#include <cstring> 
+#define N 10
 using namespace std;
 struct HNode
 {
@@ -20,7 +23,7 @@ private:
 	void selectmin(int &x, int &y, int start, int end);
 	int min(int m,int n);
 public:
-	void init();
+	void print(int i,int m, char leaf[]);
 	void CreateTree(int a[], int n);
 	void CreateCodeTable(char b[], int n);
 	void Encode(char *s, char *d, int n);
@@ -99,6 +102,7 @@ void Huffman::CreateCodeTable(char b[], int n)
 		}
 		HCodeTable[i].code[k] = '\0';
 		Reverse(HCodeTable[i].code);
+		cout << HCodeTable[i].data<< ' '<<HCodeTable[i].code << endl;
 	}
 }
 char * strcat(char *dst, char *src)
@@ -138,7 +142,17 @@ void Huffman::Decode(char *s, char *d, int n)
 		d++;
 	}
 }
-
+void Huffman::print(int i, int m,char leaf[])
+{
+	if (HTree[i].lc == -1)
+		cout << setfill(' ') << setw(m + 1) << leaf[i] << setfill('-') << setw(N - m) << '\n';
+	else
+	{
+		cout << setfill(' ') << setw(m + 1) << HTree[i].weight << setfill('-') << setw(N - m) << '\n';
+		print(HTree[i].lc, m + 1,leaf);
+		print(HTree[i].rc, m + 1,leaf);
+	}
+}
 void init(int a[],char leaf[],char str[],int nNum[],int &n)
 {
 	cout << "输入要编码的字符串:";
@@ -169,14 +183,17 @@ int main()
 	char leaf[256];
 	int a[256];
 	int n;
+	char s[10000] = "";
 	init(a, leaf, str, nNum, n);
 	Huffman A;
 	A.CreateTree(a,n);
+	cout << "哈夫曼树\n";
+	A.print(2 * n - 2, 1, leaf);
+	cout << "编码表\n";
 	A.CreateCodeTable(leaf,n);
-	char s[10000] = "";
 	A.Encode(s, str, n);
-	cout << "编码结果为:"<<s;
-	cout << endl;
+	cout << "编码结果为:"<<s<< endl;;
 	A.Decode(s, str, n);
-	cout << "解码结果:"<<str;
+	cout << "解码结果:" << str << endl;
+	cout << "压缩率:" << float(strlen(s)) / float(strlen(str) * 8) * 100 << '%' << endl;
 }
